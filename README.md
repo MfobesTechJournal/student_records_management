@@ -1,166 +1,66 @@
-ETL Pipeline
-
-
-
-This project includes a Python-based ETL pipeline designed to generate, validate, and load student records data into PostgreSQL. The pipeline prioritizes correctness, traceability, and schema alignment rather than unnecessary complexity.
-
-
-
-Tools Used
-
-
-
-Python 3
-
-
-
-Faker
-
-
-
-pandas
-
-
-
-psycopg2
-
-
-
-PostgreSQL
-
-
-
-Step 1: Data Generation (Extract)
-
-
-
-Script: etl/generate\_data.py
-
-
-
-The data generation script creates realistic synthetic data that conforms to the database schema.
-
-
-
-What the script generates:
-
-
-
-20–50 students with realistic names and email addresses
-
-
-
-Predefined courses that already exist in the database
-
-
-
-Enrollment records linking students to courses
-
-
-
-The output is written to CSV files in the /data directory:
-
-
-
-students.csv
-
-
-
-courses.csv
-
-
-
-enrollments.csv
-
-
-
-This simulates real-world source files and ensures referential integrity before loading.
-
-
-
-Step 2: Validation and Transformation
-
-
-
-Basic validation is applied before loading:
-
-
-
-Required fields are enforced
-
-
-
-IDs align with database primary and foreign keys
-
-
-
-Data types are compatible with the schema
-
-
-
-The transformation step is intentionally minimal, ensuring that only valid and schema-compliant records are loaded.
-
-
-
-Step 3: Load into PostgreSQL
-
-
-
-Script: etl/load\_data.py
-
-
-
-This script:
-
-
-
-Reads database credentials from environment variables
-
-
-
-Connects to PostgreSQL using psycopg2
-
-
-
-Loads CSV files in dependency order (students → courses → enrollments)
-
-
-
-Uses batch inserts for efficiency
-
-
-
-Logs ETL execution details and errors to a local log file
-
-
-
-A successful run ends with the message:
-
-
-
-ETL load completed successfully.
-
-
-
-Environment Configuration
-
-
-
-Database credentials are stored in a .env file and excluded from version control.
-
-
-
-Example .env structure:
-
-
-
-DB\_HOST=localhost
-
-DB\_PORT=5433
-
-DB\_NAME=student\_records\_db
-
-DB\_USER=postgres
-
-DB\_PASSWORD=123456
+Student Records Management System
+
+Project Overview
+
+This project implements a simple Student Records Management System using Python and PostgreSQL.
+It demonstrates an end-to-end ETL pipeline that loads student, course, and enrollment data from CSV files into a relational database.
+
+The goal of the project is to show practical data engineering fundamentals:
+
+- Structured data modeling
+- ETL pipeline design
+- Database interaction using Python
+- Reproducible project structure
+
+Folder Structure:
+
+Student_Management/
+│
+├── data/
+│   ├── students.csv
+│   ├── courses.csv
+│   └── enrollments.csv
+│
+├── etl/
+│   ├── extract.py
+│   ├── transform.py
+│   ├── load.py
+│   └── run_etl.py
+│
+├── logs/
+│   └── etl.log
+│
+├── .gitignore
+├── requirements.txt
+└── README.md
+
+ETL Process
+
+Extract
+
+The extract step reads raw CSV files containing students, courses, and enrollment data.
+The data is loaded into memory using Python’s CSV or pandas functionality.
+
+Transform
+
+ Transformations are applied to ensure data consistency:
+- Data type validation
+- Handling missing values
+- Standardizing column names
+
+Load
+
+The cleaned data is loaded into a PostgreSQL database.
+Tables are created if they do not already exist, and records are inserted using SQL statements executed from Python.
+
+The ETL process can be run end-to-end using the main script:
+python etl/run_etl.py
+
+Requirements
+- Python 3.x
+- PostgreSQL
+- Required Python packages listed in `requirements.txt`
+
+Notes
+Environment variables such as database credentials are expected to be configured locally.
 
