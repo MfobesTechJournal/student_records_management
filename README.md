@@ -1,66 +1,101 @@
-Student Records Management System
+**# Student Records Management System
 
-Project Overview
+## Project Overview
+This project implements a complete Student Records Management System using PostgreSQL and Python.  
+The system manages students, courses, enrollments, grades, and attendance while supporting analytics for academic performance and engagement.
 
-This project implements a simple Student Records Management System using Python and PostgreSQL.
-It demonstrates an end-to-end ETL pipeline that loads student, course, and enrollment data from CSV files into a relational database.
+The project was developed as part of the IBM Data Engineering Professional Certificate and demonstrates relational database design, ETL development, and SQL-based analytics.
 
-The goal of the project is to show practical data engineering fundamentals:
 
-- Structured data modeling
-- ETL pipeline design
-- Database interaction using Python
-- Reproducible project structure
 
-Folder Structure:
+## Database Design
+The database follows a normalized relational schema centered around enrollments.
 
+Key design principles:
+- Students enroll in courses through an enrollment table
+- Grades and attendance reference enrollments to avoid duplication
+- Referential integrity enforced using foreign keys
+- Constraints ensure data validity (NOT NULL, UNIQUE, CHECK)
+
+An ERD diagram is included in the repository.
+
+---
+
+## ETL Pipeline (Python)
+
+### Data Generation
+- Faker is used to generate realistic student data
+- 300+ students and 25 courses are created
+- Enrollments, grades, and attendance records are generated programmatically
+
+### Extract
+- Data is generated and saved as CSV files
+- CSV files are stored in the `/data` directory
+
+### Transform
+- Missing values are handled before loading
+- Email formats are validated
+- Attendance records are aggregated
+- Grades are validated within accepted ranges
+
+### Load
+- Data is loaded into PostgreSQL using batch inserts
+- Transactions ensure rollback on failure
+- Logging is implemented for traceability
+
+To run ETL:
+```bash
+python etl/generate_data.py
+python etl/load_data.py
+
+SQL Analytics
+
+Implemented analytics include:
+
+Viewing students enrolled in a specific course
+
+Calculating course-level average grades
+
+Identifying students with attendance below 75%
+
+Ranking top students by GPA
+
+Generating enrollment statistics per course
+
+Queries are located in the sql/analysis_queries.sql file.
+
+Views & Stored Procedures
+Views
+
+student_transcripts – consolidated student academic records
+
+attendance_summary – attendance percentages per enrollment
+
+Stored Procedures
+
+enroll_student – enrolls a student in a course safely
+
+record_grade – inserts or updates student grades
+
+These are created directly in PostgreSQL.
+
+Project Structure
 Student_Management/
 │
-├── data/
-│   ├── students.csv
-│   ├── courses.csv
-│   └── enrollments.csv
-│
-├── etl/
-│   ├── extract.py
-│   ├── transform.py
-│   ├── load.py
-│   └── run_etl.py
-│
-├── logs/
-│   └── etl.log
-│
-├── .gitignore
-├── requirements.txt
-└── README.md
+├── data/               # CSV files
+├── etl/                # Python ETL scripts
+├── logs/               # ETL logs (ignored in Git)
+├── schema.sql          # Database schema
+├── sql/                # Analytics queries
+├── ERD.pdf             # Entity Relationship Diagram
+├── README.md
 
-ETL Process
+Technologies Used
 
-Extract
+PostgreSQL
 
-The extract step reads raw CSV files containing students, courses, and enrollment data.
-The data is loaded into memory using Python’s CSV or pandas functionality.
+Python (psycopg2, Faker, pandas)
 
-Transform
+SQL
 
- Transformations are applied to ensure data consistency:
-- Data type validation
-- Handling missing values
-- Standardizing column names
-
-Load
-
-The cleaned data is loaded into a PostgreSQL database.
-Tables are created if they do not already exist, and records are inserted using SQL statements executed from Python.
-
-The ETL process can be run end-to-end using the main script:
-python etl/run_etl.py
-
-Requirements
-- Python 3.x
-- PostgreSQL
-- Required Python packages listed in `requirements.txt`
-
-Notes
-Environment variables such as database credentials are expected to be configured locally.
-
+pgAdmin / psql
