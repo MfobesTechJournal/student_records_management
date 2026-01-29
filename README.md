@@ -1,166 +1,101 @@
-ETL Pipeline
+**# Student Records Management System
+
+## Project Overview
+This project implements a complete Student Records Management System using PostgreSQL and Python.  
+The system manages students, courses, enrollments, grades, and attendance while supporting analytics for academic performance and engagement.
+
+The project was developed as part of the IBM Data Engineering Professional Certificate and demonstrates relational database design, ETL development, and SQL-based analytics.
 
 
 
-This project includes a Python-based ETL pipeline designed to generate, validate, and load student records data into PostgreSQL. The pipeline prioritizes correctness, traceability, and schema alignment rather than unnecessary complexity.
+## Database Design
+The database follows a normalized relational schema centered around enrollments.
 
+Key design principles:
+- Students enroll in courses through an enrollment table
+- Grades and attendance reference enrollments to avoid duplication
+- Referential integrity enforced using foreign keys
+- Constraints ensure data validity (NOT NULL, UNIQUE, CHECK)
 
+An ERD diagram is included in the repository.
 
-Tools Used
+---
 
+## ETL Pipeline (Python)
 
+### Data Generation
+- Faker is used to generate realistic student data
+- 300+ students and 25 courses are created
+- Enrollments, grades, and attendance records are generated programmatically
 
-Python 3
+### Extract
+- Data is generated and saved as CSV files
+- CSV files are stored in the `/data` directory
 
+### Transform
+- Missing values are handled before loading
+- Email formats are validated
+- Attendance records are aggregated
+- Grades are validated within accepted ranges
 
+### Load
+- Data is loaded into PostgreSQL using batch inserts
+- Transactions ensure rollback on failure
+- Logging is implemented for traceability
 
-Faker
+To run ETL:
+```bash
+python etl/generate_data.py
+python etl/load_data.py
 
+SQL Analytics
 
+Implemented analytics include:
 
-pandas
+Viewing students enrolled in a specific course
 
+Calculating course-level average grades
 
+Identifying students with attendance below 75%
 
-psycopg2
+Ranking top students by GPA
 
+Generating enrollment statistics per course
 
+Queries are located in the sql/analysis_queries.sql file.
+
+Views & Stored Procedures
+Views
+
+student_transcripts – consolidated student academic records
+
+attendance_summary – attendance percentages per enrollment
+
+Stored Procedures
+
+enroll_student – enrolls a student in a course safely
+
+record_grade – inserts or updates student grades
+
+These are created directly in PostgreSQL.
+
+Project Structure
+Student_Management/
+│
+├── data/               # CSV files
+├── etl/                # Python ETL scripts
+├── logs/               # ETL logs (ignored in Git)
+├── schema.sql          # Database schema
+├── sql/                # Analytics queries
+├── ERD.pdf             # Entity Relationship Diagram
+├── README.md
+
+Technologies Used
 
 PostgreSQL
 
+Python (psycopg2, Faker, pandas)
 
+SQL
 
-Step 1: Data Generation (Extract)
-
-
-
-Script: etl/generate\_data.py
-
-
-
-The data generation script creates realistic synthetic data that conforms to the database schema.
-
-
-
-What the script generates:
-
-
-
-20–50 students with realistic names and email addresses
-
-
-
-Predefined courses that already exist in the database
-
-
-
-Enrollment records linking students to courses
-
-
-
-The output is written to CSV files in the /data directory:
-
-
-
-students.csv
-
-
-
-courses.csv
-
-
-
-enrollments.csv
-
-
-
-This simulates real-world source files and ensures referential integrity before loading.
-
-
-
-Step 2: Validation and Transformation
-
-
-
-Basic validation is applied before loading:
-
-
-
-Required fields are enforced
-
-
-
-IDs align with database primary and foreign keys
-
-
-
-Data types are compatible with the schema
-
-
-
-The transformation step is intentionally minimal, ensuring that only valid and schema-compliant records are loaded.
-
-
-
-Step 3: Load into PostgreSQL
-
-
-
-Script: etl/load\_data.py
-
-
-
-This script:
-
-
-
-Reads database credentials from environment variables
-
-
-
-Connects to PostgreSQL using psycopg2
-
-
-
-Loads CSV files in dependency order (students → courses → enrollments)
-
-
-
-Uses batch inserts for efficiency
-
-
-
-Logs ETL execution details and errors to a local log file
-
-
-
-A successful run ends with the message:
-
-
-
-ETL load completed successfully.
-
-
-
-Environment Configuration
-
-
-
-Database credentials are stored in a .env file and excluded from version control.
-
-
-
-Example .env structure:
-
-
-
-DB\_HOST=localhost
-
-DB\_PORT=5433
-
-DB\_NAME=student\_records\_db
-
-DB\_USER=postgres
-
-DB\_PASSWORD=123456
-
+pgAdmin / psql
