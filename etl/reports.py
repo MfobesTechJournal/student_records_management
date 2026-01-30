@@ -8,15 +8,18 @@ def generate_csv():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT s.name, s.email, c.name, e.grade, e.attendance
+        SELECT s.first_name || ' ' || s.last_name AS student_name,
+               s.email,
+               c.course_name,
+               e.enrollment_date
         FROM enrollments e
-        JOIN students s ON e.student_id = s.id
-        JOIN courses c ON e.course_id = c.id
+        JOIN students s ON e.student_id = s.student_id
+        JOIN courses c ON e.course_id = c.course_id
     """)
 
     with open("report.csv", "w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(["Student", "Email", "Course", "Grade", "Attendance"])
+        writer.writerow(["Student", "Email", "Course", "Enrollment Date"])
         writer.writerows(cursor.fetchall())
 
     conn.close()
@@ -27,10 +30,12 @@ def generate_pdf():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT s.name, c.name, e.grade, e.attendance
+        SELECT s.first_name || ' ' || s.last_name AS student_name,
+               c.course_name,
+               e.enrollment_date
         FROM enrollments e
-        JOIN students s ON e.student_id = s.id
-        JOIN courses c ON e.course_id = c.id
+        JOIN students s ON e.student_id = s.student_id
+        JOIN courses c ON e.course_id = c.course_id
     """)
 
     doc = SimpleDocTemplate("report.pdf")
@@ -38,7 +43,7 @@ def generate_pdf():
     content = []
 
     for row in cursor.fetchall():
-        text = f"Student: {row[0]} | Course: {row[1]} | Grade: {row[2]} | Attendance: {row[3]}"
+        text = f"Student: {row[0]} | Course: {row[1]} | Enrollment Date: {row[2]}"
         content.append(Paragraph(text, styles["Normal"]))
 
     doc.build(content)
