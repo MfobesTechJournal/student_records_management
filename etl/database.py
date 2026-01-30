@@ -1,13 +1,13 @@
-import psycopg2 # Changed from sqlite3 to psycopg2
+import os
+import psycopg2
 
 def get_connection():
-    # Use the connection details from your pgAdmin properties
     return psycopg2.connect(
-        dbname="student_records_db", # From your pgAdmin maintenance database
-        user="postgres",              # Your pgAdmin username
-        password="123456",            # The password you used for your connection
-        host="localhost",             # Your local server address
-        port="5433"                   # The specific port shown in your pgAdmin
+        host=os.getenv("DB_HOST", "localhost"),
+        port=os.getenv("DB_PORT", "5432"),
+        database=os.getenv("DB_NAME", "student_records_db"),
+        user=os.getenv("DB_USER", "postgres"),
+        password=os.getenv("DB_PASSWORD", "")
     )
 
 def setup_database():
