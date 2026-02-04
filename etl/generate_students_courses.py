@@ -13,7 +13,7 @@ conn = psycopg2.connect(
 )
 cur = conn.cursor()
 
-# ---------- STUDENTS ----------
+
 students = []
 emails = set()
 
@@ -31,7 +31,7 @@ cur.executemany("""
     VALUES (%s, %s, %s, %s)
 """, students)
 
-# ---------- COURSES ----------
+
 courses = []
 course_names = set()
 

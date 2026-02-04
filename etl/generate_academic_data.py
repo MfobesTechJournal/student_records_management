@@ -13,7 +13,7 @@ conn = psycopg2.connect(
 
 cur = conn.cursor()
 
-# ---- Students ----
+
 students = []
 for _ in range(300):
     students.append((
@@ -28,7 +28,7 @@ cur.executemany("""
     VALUES (%s, %s, %s, %s)
 """, students)
 
-# ---- Courses ----
+
 courses = []
 for _ in range(25):
     courses.append((

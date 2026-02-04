@@ -1,6 +1,8 @@
-🎓 Student Records Management System
-Project Overview
-This project implements a complete Student Records Management System using PostgreSQL and Python. The system manages students, courses, enrollments, grades, and attendance while supporting deep analytics for academic performance and engagement.
+**# Student Records Management System
+
+## Project Overview
+This project implements a complete Student Records Management System using PostgreSQL and Python.  
+The system manages students, courses, enrollments, grades, and attendance while supporting analytics for academic performance and engagement.
 
 Developed as part of the IBM Data Engineering Professional Certificate, this repository demonstrates core competencies in:
 
@@ -10,41 +12,45 @@ ETL Pipeline Development (Python, Faker, Batch Loading).
 
 SQL Analytics (Complex Queries, Views, and Stored Procedures).
 
-🏗️ Database Design
-The database follows a normalized relational schema centered around the enrollments table to ensure data integrity and minimize redundancy.
 
-Key Principles:
 
-Normalized Schema: Grades and attendance reference enrollments rather than students directly to maintain a clean relationship history.
+## Database Design
+The database follows a normalized relational schema centered around enrollments.
 
-Integrity Constraints: Strict enforcement of NOT NULL for critical fields (like course_code and graded_at), UNIQUE identifiers, and CHECK constraints for valid grade ranges.
+Key design principles:
+- Students enroll in courses through an enrollment table
+- Grades and attendance reference enrollments to avoid duplication
+- Referential integrity enforced using foreign keys
+- Constraints ensure data validity (NOT NULL, UNIQUE, CHECK)
 
-Relational Mapping: Referential integrity is enforced using foreign keys across all five core tables.
+An ERD diagram is included in the repository.
 
-⚙️ ETL Pipeline (Python)
-Data Generation & Transformation
-Faker Integration: Programmatically generates 300+ students and 25 courses.
+---
 
-Validation Logic:
+## ETL Pipeline (Python)
 
-Validates email formats and date ranges.
+### Data Generation
+- Faker is used to generate realistic student data
+- 300+ students and 25 courses are created
+- Enrollments, grades, and attendance records are generated programmatically
 
-Ensures grades are clamped within the 0–100 range.
+### Extract
+- Data is generated and saved as CSV files
+- CSV files are stored in the `/data` directory
 
-Generates unique, high-fidelity Course Codes (e.g., CS-101) to satisfy schema constraints.
+### Transform
+- Missing values are handled before loading
+- Email formats are validated
+- Attendance records are aggregated
+- Grades are validated within accepted ranges
 
-Consistency Fixes: Attendance records are transformed from raw statuses into boolean logic for optimized analytics.
+### Load
+- Data is loaded into PostgreSQL using batch inserts
+- Transactions ensure rollback on failure
+- Logging is implemented for traceability
 
-Load Process
-Data is loaded into PostgreSQL via Psycopg2 using batch inserts. The pipeline is designed to be idempotent:
-
-Transactions: Uses conn.rollback() and conn.commit() to ensure atomic operations (no partial data loads).
-
-Port Specificity: Specifically configured to connect via Port 5433 to accommodate custom Windows/PostgreSQL environments.
-
-To run the ETL pipeline:
-
-Bash
+To run ETL:
+```bash
 python etl/generate_sample_data.py
 python etl/generate_enrollments.py
 python etl/generate_grades.py
@@ -72,15 +78,20 @@ Ranking top-performing students by weighted GPA.
 Plaintext
 Student_Management/
 │
-├── data/                # CSV data exports
-├── etl/                 # Python ETL scripts & CLI Application
-├── logs/                # Traceability logs (Git ignored)
-├── sql-queries/         # Database schema, views, and procedures
-├── README.md            # Project documentation
-└── ERD.pdf              # Entity Relationship Diagram
-🛠️ Technologies Used
-Database: PostgreSQL 16 (Port 5433)
+├── data/               # CSV files
+├── etl/                # Python ETL scripts
+├── logs/               # ETL logs (ignored in Git)
+├── schema.sql          # Database schema
+├── sql/                # Analytics queries
+├── ERD.pdf             # Entity Relationship Diagram
+├── README.md
 
-Python Libraries: psycopg2, faker, random
+Technologies Used
 
-Tools: pgAdmin 4, VS Code, Git
+PostgreSQL
+
+Python (psycopg2, Faker, pandas)
+
+SQL
+
+pgAdmin / psql

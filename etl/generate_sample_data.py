@@ -14,7 +14,7 @@ conn = psycopg2.connect(
 
 cur = conn.cursor()
 
-# ---- Students ----
+
 students = []
 for _ in range(300):
     students.append((
@@ -29,16 +29,16 @@ cur.executemany("""
     VALUES (%s, %s, %s, %s)
 """, students)
 
-# ---- Courses ----
+
 courses = []
 for _ in range(25):
     courses.append((
-        fake.unique.word().title(),        # Course Name
-        fake.unique.bothify(text='??-###').upper(), # Course Code (e.g., EN-482)
-        random.randint(1, 6)               # Credits
+        fake.unique.word().title(),        
+        fake.unique.bothify(text='??-
+        random.randint(1, 6)               
     ))
 
-# Updated to include the course_code column
+
 cur.executemany("""
     INSERT INTO courses (course_name, course_code, credits)
     VALUES (%s, %s, %s)

@@ -15,7 +15,7 @@ def main():
     cur = conn.cursor()
 
     try:
-        # Fetch students and courses
+        
         cur.execute("SELECT student_id FROM students;")
         students = [row[0] for row in cur.fetchall()]
 
