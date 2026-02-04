@@ -1,13 +1,16 @@
 import psycopg2
 import random
+from faker import Faker # Added for date generation
+
+fake = Faker()
 
 DB_CONFIG = {
     "dbname": "student_records_db",
     "user": "postgres",
     "password": "123456",
     "host": "localhost",
-    "port": 5433
-}
+    "port": "5433"
+)
 
 def main():
     conn = psycopg2.connect(**DB_CONFIG)
@@ -33,17 +36,21 @@ def main():
         for enrollment_id in enrollment_ids:
             # realistic grade distribution
             grade = round(random.uniform(45, 95), 2)
-            grades.append((enrollment_id, grade))
+            # Added fake date to satisfy the NOT NULL constraint on graded_at
+            graded_at = fake.date_this_year() 
+            
+            grades.append((enrollment_id, grade, graded_at))
 
+        # Updated query to include graded_at
         insert_query = """
-            INSERT INTO grades (enrollment_id, grade)
-            VALUES (%s, %s);
+            INSERT INTO grades (enrollment_id, grade, graded_at)
+            VALUES (%s, %s, %s);
         """
 
         cur.executemany(insert_query, grades)
         conn.commit()
 
-        print(f"Grades inserted: {len(grades)}")
+        print(f"Grades inserted successfully: {len(grades)}")
 
     except Exception as e:
         conn.rollback()

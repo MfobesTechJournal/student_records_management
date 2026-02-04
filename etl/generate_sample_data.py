@@ -8,7 +8,8 @@ conn = psycopg2.connect(
     dbname="student_records_db",
     user="postgres",
     password="123456",
-    host="5433"
+    host="localhost",
+    port="5433"
 )
 
 cur = conn.cursor()
@@ -32,13 +33,15 @@ cur.executemany("""
 courses = []
 for _ in range(25):
     courses.append((
-        fake.unique.word().title(),
-        random.randint(1, 6)
+        fake.unique.word().title(),        # Course Name
+        fake.unique.bothify(text='??-###').upper(), # Course Code (e.g., EN-482)
+        random.randint(1, 6)               # Credits
     ))
 
+# Updated to include the course_code column
 cur.executemany("""
-    INSERT INTO courses (course_name, credits)
-    VALUES (%s, %s)
+    INSERT INTO courses (course_name, course_code, credits)
+    VALUES (%s, %s, %s)
 """, courses)
 
 conn.commit()
