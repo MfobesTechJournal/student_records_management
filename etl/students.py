@@ -9,7 +9,7 @@ def add_student():
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO students (name, email) VALUES (?, ?)",
+            "INSERT INTO students (name, email) VALUES (%s, %s)",
             (name, email)
         )
         conn.commit()

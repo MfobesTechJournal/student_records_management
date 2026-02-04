@@ -45,8 +45,11 @@ An ERD diagram is included in the repository.
 
 To run ETL:
 ```bash
-python etl/generate_data.py
-python etl/load_data.py
+python etl/generate_sample_data.py
+python etl/generate_enrollments.py
+python etl/generate_grades.py
+python etl/generate_attendance.py
+```
 
 SQL Analytics
 

@@ -27,8 +27,8 @@ def record_grade():
     cursor = conn.cursor()
     cursor.execute("""
         UPDATE enrollments
-        SET grade = ?
-        WHERE student_id = ? AND course_id = ?
+        SET grade = %s
+        WHERE student_id = %s AND course_id = %s
     """, (grade, student_id, course_id))
     conn.commit()
     conn.close()

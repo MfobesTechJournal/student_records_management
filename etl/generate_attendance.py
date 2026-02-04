@@ -7,7 +7,7 @@ DB_CONFIG = {
     "user": "postgres",
     "password": "REDACTED",
     "host": "localhost",
-    "port": 5433
+    "port": "5433"
 }
 
 def main():
