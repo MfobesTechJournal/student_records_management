@@ -15,7 +15,7 @@ def main():
     cur = conn.cursor()
 
     try:
-        # Fetch enrollment IDs
+        
         cur.execute("SELECT enrollment_id FROM enrollments;")
         enrollment_ids = [row[0] for row in cur.fetchall()]
 
@@ -26,14 +26,14 @@ def main():
         attendance_rows = []
 
         for enrollment_id in enrollment_ids:
-            # Number of class sessions per course
+            
             num_sessions = random.randint(10, 20)
 
             start_date = date.today() - timedelta(days=90)
 
             for i in range(num_sessions):
                 attendance_date = start_date + timedelta(days=i * 3)
-                present = random.random() < 0.85  # 85% attendance rate
+                present = random.random() < 0.85  
 
                 attendance_rows.append(
                     (enrollment_id, attendance_date, present)

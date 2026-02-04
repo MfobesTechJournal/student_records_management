@@ -12,10 +12,10 @@ def get_connection():
     return conn
 
 def setup_database():
-    conn = get_connection() # Connects to PostgreSQL instead of school.db
+    conn = get_connection() 
     cur = conn.cursor()
     
-    # Create the table using PostgreSQL syntax
+    
     cur.execute("""
         CREATE TABLE IF NOT EXISTS students (
             id SERIAL PRIMARY KEY,    -- SERIAL is the Postgres way to do AUTOINCREMENT
