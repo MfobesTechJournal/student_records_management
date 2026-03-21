@@ -1,13 +1,16 @@
-import os
 import psycopg2
 
+from .secrets import get_db_config
+
+
 def get_connection():
+    cfg = get_db_config()
     conn = psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        port=os.getenv("DB_PORT", "5433"),
-        database=os.getenv("DB_NAME", "student_records_db"),
-        user=os.getenv("DB_USER", "postgres"),
-        password=os.getenv("DB_PASSWORD","REDACTED")
+        host=cfg["host"],
+        port=cfg["port"],
+        database=cfg["dbname"],
+        user=cfg["user"],
+        password=cfg["password"],
     )
     return conn
 

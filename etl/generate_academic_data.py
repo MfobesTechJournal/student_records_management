@@ -2,14 +2,12 @@ from faker import Faker
 import psycopg2
 import random
 
+from .secrets import get_db_config
+
 fake = Faker()
 
-conn = psycopg2.connect(
-    dbname="student_records_db",
-    user="postgres",
-    password="REDACTED",
-    host="localhost"
-)
+cfg = get_db_config()
+conn = psycopg2.connect(**cfg)
 
 cur = conn.cursor()
 

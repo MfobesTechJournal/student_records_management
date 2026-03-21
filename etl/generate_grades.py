@@ -2,18 +2,13 @@ import psycopg2
 import random
 from faker import Faker
 
+from .secrets import get_db_config
+
 fake = Faker()
 
-DB_CONFIG = {
-    "dbname": "student_records_db",
-    "user": "postgres",
-    "password": "REDACTED",
-    "host": "localhost",
-    "port": "5433"
-}
 
 def main():
-    conn = psycopg2.connect(**DB_CONFIG)
+    conn = psycopg2.connect(**get_db_config())
     cur = conn.cursor()
 
     try:

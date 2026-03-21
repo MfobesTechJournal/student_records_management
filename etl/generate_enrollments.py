@@ -2,13 +2,8 @@ import psycopg2
 import random
 from datetime import date
 
-DB_CONFIG = {
-    "dbname": "student_records_db",
-    "user": "postgres",
-    "password": "REDACTED",
-    "host": "localhost",
-    "port": "5433"
-}
+from .secrets import get_db_config
+
 
 def main():
     conn = psycopg2.connect(**DB_CONFIG)
