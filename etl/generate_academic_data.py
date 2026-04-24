@@ -1,46 +1,5 @@
-from faker import Faker
-import psycopg2
-import random
-
-from .secrets import get_db_config
-
-fake = Faker()
-
-cfg = get_db_config()
-conn = psycopg2.connect(**cfg)
-
-cur = conn.cursor()
+from .seed_data import seed_students_and_courses
 
 
-students = []
-for _ in range(300):
-    students.append((
-        fake.first_name(),
-        fake.last_name(),
-        fake.unique.email(),
-        fake.date_of_birth(minimum_age=18, maximum_age=30)
-    ))
-
-cur.executemany("""
-    INSERT INTO students (first_name, last_name, email, date_of_birth)
-    VALUES (%s, %s, %s, %s)
-""", students)
-
-
-courses = []
-for _ in range(25):
-    courses.append((
-        fake.unique.word().title(),
-        random.randint(1, 6)
-    ))
-
-cur.executemany("""
-    INSERT INTO courses (course_name, credits)
-    VALUES (%s, %s)
-""", courses)
-
-conn.commit()
-cur.close()
-conn.close()
-
-print("Sample students and courses inserted successfully.")
+if __name__ == "__main__":
+    seed_students_and_courses()

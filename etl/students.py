@@ -1,36 +1,46 @@
-from .validation import validate_non_empty
 from .database import get_connection
+from .validation import validate_date, validate_email, validate_non_empty
+
 
 def add_student():
     try:
-        name = validate_non_empty(input("Student name: "), "Name")
-        email = validate_non_empty(input("Student email: "), "Email")
+        first_name = validate_non_empty(input("First name: "), "First name")
+        last_name = validate_non_empty(input("Last name: "), "Last name")
+        email = validate_email(validate_non_empty(input("Email: "), "Email"))
+        date_of_birth = validate_date(input("Date of birth (YYYY-MM-DD): "))
 
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO students (name, email) VALUES (%s, %s)",
-            (name, email)
-        )
-        conn.commit()
-        conn.close()
+        with get_connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO students (first_name, last_name, email, date_of_birth)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    (first_name, last_name, email, date_of_birth),
+                )
         print("Student added.")
-    except Exception as e:
-        print("Error:", e)
+    except Exception as exc:
+        print("Error:", exc)
+
 
 def list_students():
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM students")
-    for row in cursor.fetchall():
-        print(row)
-    conn.close()
+    with get_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT student_id, first_name, last_name, email, date_of_birth, registered_at
+                FROM students
+                ORDER BY student_id
+                """
+            )
+            for row in cursor.fetchall():
+                print(row)
+
 
 def delete_student():
-    student_id = input("Student ID: ")
-    conn = get_connection()
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM students WHERE id = ?", (student_id,))
-    conn.commit()
-    conn.close()
-    print("Student deleted.")
+    student_id = input("Student ID: ").strip()
+    with get_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("DELETE FROM students WHERE student_id = %s", (student_id,))
+            deleted = cursor.rowcount
+    print("Student deleted." if deleted else "Student not found.")
