@@ -1,3 +1,16 @@
-course_id,course_name
-1,Database systems
-2,Data Analytics
+course_id,course_code,course_name,credits,status
+1,CS101,Introduction to Computer Science,3,active
+2,CS102,Data Structures,3,active
+3,CS201,Algorithms,4,active
+4,CS202,Database Systems,4,active
+5,CS301,Web Development,3,active
+6,CS302,Machine Learning,4,active
+7,MATH101,Calculus I,4,active
+8,MATH102,Calculus II,4,active
+9,MATH201,Linear Algebra,3,active
+10,PHYS101,Physics I,4,active
+11,PHYS102,Physics II,4,active
+12,ENG101,English Composition,3,active
+13,ENG102,Literature,3,active
+14,CHEM101,Chemistry I,4,active
+15,CHEM102,Chemistry II,4,active
